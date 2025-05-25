@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代码雨</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        secondary: '#EC4899',
+                        neutral: '#1F2937',
+                        'neutral-light': '#F3F4F6',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .shadow-custom {
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            }
+            .transition-custom {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .cursor-grab {
+                cursor: grab;
+            }
+            .cursor-grabbing {
+                cursor: grabbing;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen overflow-hidden">
+    <div id="floating-panel" class="fixed max-w-md w-full bg-white rounded-xl shadow-custom p-6 transition-custom hover:shadow-lg z-50 transform scale-100 opacity-100" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <div id="panel-header" class="text-[clamp(1.5rem,3vw,2rem)] font-bold text-neutral mb-6 flex items-center cursor-grab">
+            <i class="fa fa-paint-brush text-primary mr-3"></i>文字设置
+            <div class="ml-auto flex space-x-2">
+                <button id="minimize-btn" class="text-gray-500 hover:text-primary transition-custom">
+                    <i class="fa fa-window-minimize"></i>
+                </button>
+                <button id="close-btn" class="text-gray-500 hover:text-red-500 transition-custom">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="mb-6">
+            <label for="text-input" class="block text-sm font-medium text-gray-700 mb-2">输入文字</label>
+            <textarea id="text-input" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-custom resize-none" placeholder="请输入文字..."></textarea>
+        </div>
+        
+        <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-2">选择颜色</label>
+            <div class="flex flex-wrap gap-3">
+                <button class="color-option w-8 h-8 rounded-full bg-red-500 transition-custom hover:scale-110 active:scale-95" data-color="#EF4444"></button>
+                <button class="color-option w-8 h-8 rounded-full bg-orange-500 transition-custom hover:scale-110 active:scale-95" data-color="#F97316"></button>
+                <button class="color-option w-8 h-8 rounded-full bg-yellow-500 transition-custom hover:scale-110 active:scale-95" data-color="#EAB308"></button>
+                <button class="color-option w-8 h-8 rounded-full bg-green-500 transition-custom hover:scale-110 active:scale-95" data-color="#22C55E"></button>
+                <button class="color-option w-8 h-8 rounded-full bg-blue-500 transition-custom hover:scale-110 active:scale-95" data-color="#3B82F6"></button>
+                <button class="color-option w-8 h-8 rounded-full bg-indigo-500 transition-custom hover:scale-110 active:scale-95" data-color="#6366F1"></button>
+                <button class="color-option w-8 h-8 rounded-full bg-purple-500 transition-custom hover:scale-110 active:scale-95" data-color="#A855F7"></button>
+                <button class="color-option w-8 h-8 rounded-full bg-pink-500 transition-custom hover:scale-110 active:scale-95" data-color="#EC4899"></button>
+            </div>
+        </div>
+        
+        <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-2">或自定义颜色</label>
+            <div class="flex items-center">
+                <input type="color" id="custom-color" class="w-10 h-10 border-0 p-0 cursor-pointer">
+                <input disabled type="text" id="custom-color-text" class="ml-3 flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-custom" placeholder="#000000">
+            </div>
+        </div>
+        
+        <button id="apply-btn" class="w-full bg-primary hover:bg-primary/90 text-white font-medium py-3 px-4 rounded-lg transition-custom flex items-center justify-center">
+            <i class="fa fa-check mr-2"></i>应用设置
+        </button>
+        
+        <div id="preview-container" class="mt-8 p-6 bg-neutral-light rounded-lg min-h-[100px] flex items-center justify-center">
+            <p id="preview-text" class="text-[clamp(1rem,2vw,1.5rem)] font-medium text-neutral">预览文本</p>
+        </div>
+    </div>
+
+    <button id="restore-btn" class="fixed bottom-4 right-4 bg-primary text-white p-3 rounded-full shadow-lg z-40 opacity-0 pointer-events-none transition-custom">
+        <i class="fa fa-window-maximize"></i>
+    </button>
+
+<script defer src="./bundle.js"></script></body>
+</html>
+    

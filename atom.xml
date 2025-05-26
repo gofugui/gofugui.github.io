@@ -6,7 +6,7 @@
   <link href="https://gofugui.github.io/atom.xml" rel="self"/>
   
   <link href="https://gofugui.github.io/"/>
-  <updated>2025-05-25T05:09:26.883Z</updated>
+  <updated>2025-05-26T02:35:29.744Z</updated>
   <id>https://gofugui.github.io/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>webpack基础配置详解</title>
+    <link href="https://gofugui.github.io/2025/05/26/webpack%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3/"/>
+    <id>https://gofugui.github.io/2025/05/26/webpack%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3/</id>
+    <published>2025-05-26T01:29:43.393Z</published>
+    <updated>2025-05-26T02:35:29.744Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><pre><code>webpack是一个模块打包工具,其最新版本是webpack5，它可以将多个模块进行打包，并生成一个或多个静态资源文件。webpack的配置文件为webpack.config.js，该文件包含webpack的配置信息，如入口文件、输出文件、模块加载规则、插件等。下面我们将以一个简单的webpack配置文件为例，对webpack配置项进行介绍。</code></pre><h1 id="webpack配置项"><a href="#webpack配置项" class="headerlink" title="webpack配置项"></a>webpack配置项</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @type &#123;import('webpack').Configuration&#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 1、指定html模版 2、创建html文件 3、自动引入打包后的文件 4、压缩html文件 5、配置页面标题,指定js文件引入位置（head/body）</span></span><br><span class="line"><span class="keyword">const</span> HtmlWebpackPlugin = <span class="built_in">require</span>(<span class="string">'html-webpack-plugin'</span>);</span><br><span class="line"><span class="keyword">const</span> MiniCssExtractPlugin = <span class="built_in">require</span>(<span class="string">'mini-css-extract-plugin'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义页面配置(如果是react或者vue项目可以配置为单入口的单页面应用，此处我以js项目为例，配置多页面应用)</span></span><br><span class="line"><span class="keyword">const</span> pages = [</span><br><span class="line">    &#123;</span><br><span class="line">        name: <span class="string">'home'</span>,</span><br><span class="line">        entry: <span class="string">'./src/pages/home/index.js'</span>, <span class="comment">// 页面入口文件</span></span><br><span class="line">        template: <span class="string">'./src/pages/home/index.html'</span>, <span class="comment">// 页面模板</span></span><br><span class="line">        title: <span class="string">'首页'</span>,</span><br><span class="line">        chunks: [<span class="string">'home'</span>, <span class="string">'vendor'</span>, <span class="string">'common'</span>] <span class="comment">// 指定需要引入的chunk</span></span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        name: <span class="string">'about'</span>,</span><br><span class="line">        entry: <span class="string">'./src/pages/about/index.js'</span>,</span><br><span class="line">        template: <span class="string">'./src/pages/about/index.html'</span>,</span><br><span class="line">        title: <span class="string">'关于我们'</span>,</span><br><span class="line">        chunks: [<span class="string">'about'</span>, <span class="string">'vendor'</span>, <span class="string">'common'</span>]</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">        name: <span class="string">'contact'</span>,</span><br><span class="line">        entry: <span class="string">'./src/pages/contact/index.js'</span>,</span><br><span class="line">        template: <span class="string">'./src/pages/contact/index.html'</span>,</span><br><span class="line">        title: <span class="string">'联系我们'</span>,</span><br><span class="line">        chunks: [<span class="string">'contact'</span>, <span class="string">'vendor'</span>, <span class="string">'common'</span>]</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    mode: <span class="string">'development'</span>, <span class="comment">// or 'production'</span></span><br><span class="line">    entry: pages.reduce(<span class="function">(<span class="params">acc, page</span>) =&gt;</span> &#123;</span><br><span class="line">        acc[page.name] = page.entry;</span><br><span class="line">        <span class="keyword">return</span> acc;</span><br><span class="line">    &#125;, &#123;&#125;),</span><br><span class="line">    output: &#123;</span><br><span class="line">        path: path.resolve(__dirname, <span class="string">'dist'</span>), <span class="comment">// 输出路径</span></span><br><span class="line">        filename: <span class="string">'js/[name].[contenthash].js'</span>, <span class="comment">// 输出文件名</span></span><br><span class="line">        clean: <span class="literal">true</span> <span class="comment">//  清空dist目录</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// 排除某些模块，使其不被打包，而是通过外部方式（如 CDN）引入。</span></span><br><span class="line">    <span class="comment">// 与splitChunks的区别是：externals会通过外部方式（如 CDN）引入减少包的体积，</span></span><br><span class="line">    <span class="comment">// 而splitChunks会根据代码中引用的模块进行拆分然后打包进vendor中。</span></span><br><span class="line">    externals: &#123;</span><br><span class="line">        <span class="string">'react'</span>: <span class="string">'React'</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    optimization: &#123;</span><br><span class="line">        splitChunks: &#123;</span><br><span class="line">            <span class="comment">// chunks 分割代码块 取值 all、async、initial， </span></span><br><span class="line">            <span class="comment">// async 表示分割异步代码块，initial 表示分割同步代码块，all 表示分割所有代码块</span></span><br><span class="line">            chunks: <span class="string">'all'</span>, </span><br><span class="line">            minSize: <span class="number">30000</span>, <span class="comment">// 生成块的最小字节数, 默认值 30kb</span></span><br><span class="line">            maxSize: <span class="number">0</span>,     <span class="comment">// 生成块的最大字节数, 为0byte表示不限制 </span></span><br><span class="line">            minChunks: <span class="number">1</span>,   <span class="comment">// 引用次数超过该次数的代码块才会被分割</span></span><br><span class="line">            maxAsyncRequests: <span class="number">30</span>, <span class="comment">// 按需加载的最大异步请求数</span></span><br><span class="line">            maxInitialRequests: <span class="number">30</span>, <span class="comment">// 入口点的最大并行请求数</span></span><br><span class="line">            automaticNameDelimiter: <span class="string">'~'</span>, <span class="comment">//  生成文件名的分隔符</span></span><br><span class="line">            cacheGroups: &#123;      <span class="comment">// 缓存组</span></span><br><span class="line">                vendor: &#123;</span><br><span class="line">                    test: <span class="regexp">/[\\/]node_modules[\\/]/</span>,</span><br><span class="line">                    name: <span class="string">'vendor'</span>,</span><br><span class="line">                    priority: <span class="number">-10</span>, <span class="comment">// 缓存优先级，数字越大，优先级越高</span></span><br><span class="line">                &#125;,</span><br><span class="line">                common: &#123;</span><br><span class="line">                    test: <span class="regexp">/[\\/]src[\\/]components[\\/]/</span>,</span><br><span class="line">                    name: <span class="string">'common'</span>,</span><br><span class="line">                    minChunks: <span class="number">2</span>, <span class="comment">// 覆盖默认配置， 被引用次数超过2的模块会被抽离成公共模块</span></span><br><span class="line">                &#125;,</span><br><span class="line">               </span><br><span class="line">                <span class="keyword">default</span>: &#123;</span><br><span class="line">                    reuseExistingChunk: <span class="literal">true</span>, <span class="comment">// 重用已有的块</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="built_in">module</span>: &#123;</span><br><span class="line">        rules: [</span><br><span class="line">            &#123;</span><br><span class="line">                test: <span class="regexp">/\.ts?$/</span>,</span><br><span class="line">                exclude: <span class="regexp">/node_modules/</span>,</span><br><span class="line">                use: <span class="string">'ts-loader'</span></span><br><span class="line">            &#125;,</span><br><span class="line">            &#123;</span><br><span class="line">                test: <span class="regexp">/\.css$/</span>,</span><br><span class="line">                use: [MiniCssExtractPlugin.loader, <span class="string">'css-loader'</span>]</span><br><span class="line">            &#125;,</span><br><span class="line">          </span><br><span class="line">        ]</span><br><span class="line">    &#125;,</span><br><span class="line">    plugins: [</span><br><span class="line">        <span class="keyword">new</span> MiniCssExtractPlugin(&#123;</span><br><span class="line">            filename: <span class="string">'css/[name].[conntenthash].css'</span></span><br><span class="line">        &#125;),</span><br><span class="line">        <span class="comment">// 为每个页面创建独立的HtmlWebpackPlugin实例</span></span><br><span class="line">        ...pages.map(<span class="function"><span class="params">page</span> =&gt;</span> <span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">            template: path.resolve(__dirname, page.template),</span><br><span class="line">            filename: <span class="string">`<span class="subst">$&#123;page.filename&#125;</span>.html`</span>,</span><br><span class="line">             <span class="comment">//  指定要使用的chunk 引入的chunk, </span></span><br><span class="line">             <span class="comment">//  使用 excludeChunks: ['common']指定不引入的chunk</span></span><br><span class="line">            chunks: page.chunks,   </span><br><span class="line">            title: page.title,  <span class="comment">// 设置页面标题</span></span><br><span class="line">            inject: <span class="string">'body'</span>, <span class="comment">// or 'head' 表示要插入的标签位置</span></span><br><span class="line">            scriptLoading: <span class="string">'defer'</span>, <span class="comment">// 添加 defer 属性</span></span><br><span class="line">            env: &#123;</span><br><span class="line">                APP_ENV: process.env.APP_ENV, <span class="comment">//  设置环境变量 在模板中通过 &lt;%= APP_ENV %&gt; 访问</span></span><br><span class="line">            &#125;,</span><br><span class="line">            minify: &#123;</span><br><span class="line">                removeComments: <span class="literal">true</span>,   <span class="comment">// 删除注释</span></span><br><span class="line">                collapseWhitespace: <span class="literal">true</span>, <span class="comment">// 删除空格</span></span><br><span class="line">                removeRedundantAttributes: <span class="literal">true</span>, <span class="comment">// 删除冗余属性</span></span><br><span class="line">                minifyCSS: <span class="literal">true</span>, <span class="comment">//   压缩css</span></span><br><span class="line">                minifyJS: <span class="literal">true</span>, <span class="comment">//   压缩js</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;))</span><br><span class="line">    ],</span><br><span class="line">    devServer: &#123;</span><br><span class="line">        contentBase: path.join(__dirname, <span class="string">'dist'</span>),</span><br><span class="line">        compress: <span class="literal">true</span>, <span class="comment">// 启用gzip压缩</span></span><br><span class="line">        port: <span class="number">9000</span>, <span class="comment">//  端口号</span></span><br><span class="line">        hot: <span class="literal">true</span>, <span class="comment">//   启用热更新</span></span><br><span class="line">        open: <span class="literal">true</span>, <span class="comment">//  自动打开浏览器</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h2 id="external-和-splitChunks优化策略的区别"><a href="#external-和-splitChunks优化策略的区别" class="headerlink" title="external 和 splitChunks优化策略的区别"></a>external 和 splitChunks优化策略的区别</h2><ol><li><p>splitChunks 和 externals 是两种不同的代码优化策略，它们的核心区别在于：<strong>是否将依赖打包到最终产物中</strong>。</p></li><li><p>externals 可以将某些依赖从最终产物中排除，从而减少最终产物的体积。例如，如果你的代码中引入了 jQuery，你可以将 jQuery 设置为 external，这样 jQuery 就不会被打包进最终产物中。</p></li><li><p>splitChunks：适合优化内部代码结构，提取公共依赖，实现按需加载。<br>externals：适合排除大型第三方库，减少打包体积，利用 CDN 加速或共享全局资源。</p></li></ol><h2 id="splitChunks性能优化建议"><a href="#splitChunks性能优化建议" class="headerlink" title="splitChunks性能优化建议"></a>splitChunks性能优化建议</h2><ol><li>合理设置 minSize：过小会导致生成过多小文件，增加请求数，过大会导致单个文件过大，影响加载速度</li><li>控制缓存组优先级：第三方库优先级应高于公共组件（如 vendor 设为 -10，common 设为 -20）避免过度拆分：</li><li>不要为每个模块创建单独的 chunk，否则会导致请求数过多</li><li>结合 CDN 使用：将 vendor chunk 部署到 CDN，利用浏览器缓存</li><li>使用 webpack-bundle-analyzer 分析打包结果，以确定哪些模块需要拆分</li></ol>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;pre&gt;&lt;code&gt;webpack是一个模块打包工具,其最新版本是webpack5，它可以将多个模块进行打包，并生成一个或多个静态资源文件。we</summary>
+      
+    
+    
+    
+    <category term="webpack" scheme="https://gofugui.github.io/categories/webpack/"/>
+    
+    
+    <category term="webpack" scheme="https://gofugui.github.io/tags/webpack/"/>
+    
+  </entry>
   
   <entry>
     <title>canvas实现代码雨效果</title>
@@ -39,9 +63,9 @@
     
     <category term="JavaScript" scheme="https://gofugui.github.io/tags/JavaScript/"/>
     
-    <category term="ES6" scheme="https://gofugui.github.io/tags/ES6/"/>
-    
     <category term="Canvas" scheme="https://gofugui.github.io/tags/Canvas/"/>
+    
+    <category term="ES6" scheme="https://gofugui.github.io/tags/ES6/"/>
     
     <category term="html" scheme="https://gofugui.github.io/tags/html/"/>
     
@@ -128,9 +152,9 @@
     
     <category term="JavaScript" scheme="https://gofugui.github.io/tags/JavaScript/"/>
     
-    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
-    
     <category term="ES6" scheme="https://gofugui.github.io/tags/ES6/"/>
+    
+    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
     
   </entry>
   
@@ -156,11 +180,11 @@
     
     <category term="JavaScript" scheme="https://gofugui.github.io/tags/JavaScript/"/>
     
-    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
-    
     <category term="ES6" scheme="https://gofugui.github.io/tags/ES6/"/>
     
     <category term="html" scheme="https://gofugui.github.io/tags/html/"/>
+    
+    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
     
   </entry>
   
@@ -186,11 +210,11 @@
     
     <category term="JavaScript" scheme="https://gofugui.github.io/tags/JavaScript/"/>
     
-    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
-    
     <category term="ES6" scheme="https://gofugui.github.io/tags/ES6/"/>
     
     <category term="html" scheme="https://gofugui.github.io/tags/html/"/>
+    
+    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
     
   </entry>
   
@@ -216,11 +240,11 @@
     
     <category term="JavaScript" scheme="https://gofugui.github.io/tags/JavaScript/"/>
     
-    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
-    
     <category term="ES6" scheme="https://gofugui.github.io/tags/ES6/"/>
     
     <category term="html" scheme="https://gofugui.github.io/tags/html/"/>
+    
+    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
     
   </entry>
   
@@ -246,11 +270,11 @@
     
     <category term="JavaScript" scheme="https://gofugui.github.io/tags/JavaScript/"/>
     
-    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
-    
     <category term="ES6" scheme="https://gofugui.github.io/tags/ES6/"/>
     
     <category term="html" scheme="https://gofugui.github.io/tags/html/"/>
+    
+    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
     
   </entry>
   
@@ -277,11 +301,11 @@
     
     <category term="JavaScript" scheme="https://gofugui.github.io/tags/JavaScript/"/>
     
-    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
-    
     <category term="ES6" scheme="https://gofugui.github.io/tags/ES6/"/>
     
     <category term="html" scheme="https://gofugui.github.io/tags/html/"/>
+    
+    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
     
   </entry>
   
@@ -385,9 +409,9 @@
     
     <category term="JavaScript" scheme="https://gofugui.github.io/tags/JavaScript/"/>
     
-    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
-    
     <category term="ES6" scheme="https://gofugui.github.io/tags/ES6/"/>
+    
+    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
     
   </entry>
   

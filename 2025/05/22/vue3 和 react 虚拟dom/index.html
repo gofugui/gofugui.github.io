@@ -1,0 +1,247 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="vue3 和 react 虚拟dom"><meta name="keywords" content="ES6,html,vue3,react"><meta name="author" content="Sir_Liu"><meta name="copyright" content="Sir_Liu"><title>vue3 和 react 虚拟dom | Coding Your Life</title><link rel="shortcut icon" href="/vite.svg"><link rel="stylesheet" href="/css/index.css?version=1.9.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.9.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Site Name Atom Feed"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4583227810964573" crossorigin="anonymous"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css"><script src="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js"></script><script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  hexoVersion: '3.9.0'
+} </script></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、核心实现差异"><span class="toc-number">1.</span> <span class="toc-text">一、核心实现差异</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-Diff-算法"><span class="toc-number">1.1.</span> <span class="toc-text">1. Diff 算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-渲染优化"><span class="toc-number">1.2.</span> <span class="toc-text">2. 渲染优化</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、实现策略差异"><span class="toc-number">2.</span> <span class="toc-text">二、实现策略差异</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-模板-vs-JSX"><span class="toc-number">2.1.</span> <span class="toc-text">1. 模板 vs JSX</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-响应式系统"><span class="toc-number">2.2.</span> <span class="toc-text">2. 响应式系统</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、性能优化差异"><span class="toc-number">3.</span> <span class="toc-text">三、性能优化差异</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-静态内容处理"><span class="toc-number">3.1.</span> <span class="toc-text">1. 静态内容处理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-事件处理优化"><span class="toc-number">3.2.</span> <span class="toc-text">2. 事件处理优化</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四、架构设计差异"><span class="toc-number">4.</span> <span class="toc-text">四、架构设计差异</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-组件更新粒度"><span class="toc-number">4.1.</span> <span class="toc-text">1. 组件更新粒度</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-异步渲染"><span class="toc-number">4.2.</span> <span class="toc-text">2. 异步渲染</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#五、总结对比表"><span class="toc-number">5.</span> <span class="toc-text">五、总结对比表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#六、适用场景"><span class="toc-number">6.</span> <span class="toc-text">六、适用场景</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/mirror-assets/16d2a30b4d8e2a895e6~tplv-t2oaga2asx-jj-mark:72:72:0:0:q75.avis"></div><div class="author-info__name text-center">Sir_Liu</div><div class="author-info__description text-center">无论从事什么行业，只要做好两件事就够了，一个是你的专业、一个是你的人品，专业决定了你的存在，人品决定了你的人脉，剩下的就是坚持，用善良專業和真诚赢取更多的信任。（No matter what industry you are in, it is enough to do two things well, one is your profession and the other is your character. Your profession determines your existence, and your character determines your network. The rest is persistence, and you should win more trust with kindness, professionalism and sincerity.）</div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">14</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">12</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">7</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(chrome-extension://pkfjcehoipcdbiilobhcblbkmelocaka/start/skin/images/bg-51.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">Coding Your Life</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">首页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/atom.xml">rss</a></span><span class="pull-right"></span></div><div id="post-info"><div id="post-title">vue3 和 react 虚拟dom</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2025-05-22</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/前端/">前端</a><div class="post-meta-wordcount"><span>字数总计: </span><span class="word-count">2.5k</span><span class="post-meta__separator">|</span><span>阅读时长: 11 分钟</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p>Vue 3 和 React 的虚拟 DOM 在核心概念上类似，但在实现细节、优化策略和使用方式上存在显著差异。以下是两者的关键对比：</p>
+<h3 id="一、核心实现差异"><a href="#一、核心实现差异" class="headerlink" title="一、核心实现差异"></a><strong>一、核心实现差异</strong></h3><h4 id="1-Diff-算法"><a href="#1-Diff-算法" class="headerlink" title="1. Diff 算法"></a>1. <strong>Diff 算法</strong></h4><ul>
+<li><p><strong>Vue 3</strong>：</p>
+<ul>
+<li>使用 <strong>预处理 + 最长递增子序列（LIS</strong> 算法，时间复杂度为 <strong>O(n log n)</strong></li>
+<li>优先处理相同前置 / 后置元素，快速跳过无需比较的节点</li>
+<li>通过<code>ShapeFlag</code>位运算快速判断节点类型</li>
+</ul>
+</li>
+<li><p><strong>React</strong>：</p>
+<ul>
+<li>使用<strong>双指针遍历 + key 比较</strong>，默认时间复杂度为 <strong>O(n)</strong></li>
+<li>依赖<code>key</code>属性识别同层节点变化</li>
+<li>2020 年后引入<strong>Fiber 架构</strong>，将渲染任务拆分为小单元（可中断）</li>
+</ul>
+</li>
+</ul>
+<p>javascript<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br></pre></td><td class="code"><pre><span class="line">// Vue 3的Diff算法（简化）</span><br><span class="line">// 1. 预处理相同前置/后置节点</span><br><span class="line">// 2. 处理新增/删除节点</span><br><span class="line">// 3. 使用LIS算法计算最小移动次数</span><br><span class="line">function patchKeyedChildren(c1, c2, container, parentAnchor) &#123;</span><br><span class="line">  let i = 0;</span><br><span class="line">  const l1 = c1.length;</span><br><span class="line">  const l2 = c2.length;</span><br><span class="line">  let e1 = l1 - 1; // 旧节点的结束索引</span><br><span class="line">  let e2 = l2 - 1; // 新节点的结束索引</span><br><span class="line"></span><br><span class="line">  // 1. 预处理相同前置节点</span><br><span class="line">  // (a b) c</span><br><span class="line">  // (a b) d e</span><br><span class="line">  while (i &lt;= e1 &amp;&amp; i &lt;= e2) &#123;</span><br><span class="line">    const n1 = c1[i];</span><br><span class="line">    const n2 = c2[i];</span><br><span class="line">    if (isSameVNodeType(n1, n2)) &#123;</span><br><span class="line">      patch(n1, n2, container);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      break;</span><br><span class="line">    &#125;</span><br><span class="line">    i++;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // 2. 预处理相同后置节点</span><br><span class="line">  // a (b c)</span><br><span class="line">  // d e (b c)</span><br><span class="line">  while (i &lt;= e1 &amp;&amp; i &lt;= e2) &#123;</span><br><span class="line">    const n1 = c1[e1];</span><br><span class="line">    const n2 = c2[e2];</span><br><span class="line">    if (isSameVNodeType(n1, n2)) &#123;</span><br><span class="line">      patch(n1, n2, container);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      break;</span><br><span class="line">    &#125;</span><br><span class="line">    e1--;</span><br><span class="line">    e2--;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // 3. 处理新增节点（旧节点已遍历完，新节点有剩余）</span><br><span class="line">  // (a b)</span><br><span class="line">  // (a b) c d</span><br><span class="line">  // i = 2, e1 = 1, e2 = 3</span><br><span class="line">  if (i &gt; e1) &#123;</span><br><span class="line">    if (i &lt;= e2) &#123;</span><br><span class="line">      const nextPos = e2 + 1;</span><br><span class="line">      const anchor = nextPos &lt; l2 ? c2[nextPos].el : parentAnchor;</span><br><span class="line">      while (i &lt;= e2) &#123;</span><br><span class="line">        patch(null, c2[i], container, anchor);</span><br><span class="line">        i++;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // 4. 处理删除节点（新节点已遍历完，旧节点有剩余）</span><br><span class="line">  // (a b) c d</span><br><span class="line">  // (a b)</span><br><span class="line">  // i = 2, e1 = 3, e2 = 1</span><br><span class="line">  else if (i &gt; e2) &#123;</span><br><span class="line">    while (i &lt;= e1) &#123;</span><br><span class="line">      unmount(c1[i]);</span><br><span class="line">      i++;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // 5. 处理乱序节点（核心Diff）</span><br><span class="line">  // a b [c d e] f g</span><br><span class="line">  // a b [e d c h] f g</span><br><span class="line">  else &#123;</span><br><span class="line">    const s1 = i; // 旧节点的开始索引</span><br><span class="line">    const s2 = i; // 新节点的开始索引</span><br><span class="line"></span><br><span class="line">    // 5.1 建立新节点的key到index的映射</span><br><span class="line">    const keyToNewIndexMap = new Map();</span><br><span class="line">    for (i = s2; i &lt;= e2; i++) &#123;</span><br><span class="line">      const nextChild = c2[i];</span><br><span class="line">      if (nextChild.key !== null) &#123;</span><br><span class="line">        keyToNewIndexMap.set(nextChild.key, i);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 5.2 遍历旧节点，寻找匹配的新节点</span><br><span class="line">    let j;</span><br><span class="line">    let patched = 0;</span><br><span class="line">    const toBePatched = e2 - s2 + 1;</span><br><span class="line">    let moved = false;</span><br><span class="line">    let maxNewIndexSoFar = 0;</span><br><span class="line">    const newIndexToOldIndexMap = new Array(toBePatched).fill(0);</span><br><span class="line"></span><br><span class="line">    for (i = s1; i &lt;= e1; i++) &#123;</span><br><span class="line">      const prevChild = c1[i];</span><br><span class="line">      if (patched &gt;= toBePatched) &#123;</span><br><span class="line">        // 所有新节点都已处理，剩余旧节点全部删除</span><br><span class="line">        unmount(prevChild);</span><br><span class="line">        continue;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      let newIndex;</span><br><span class="line">      if (prevChild.key !== null) &#123;</span><br><span class="line">        // 通过key查找新节点位置</span><br><span class="line">        newIndex = keyToNewIndexMap.get(prevChild.key);</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        // 没有key，遍历查找</span><br><span class="line">        for (j = s2; j &lt;= e2; j++) &#123;</span><br><span class="line">          if (</span><br><span class="line">            newIndexToOldIndexMap[j - s2] === 0 &amp;&amp;</span><br><span class="line">            isSameVNodeType(prevChild, c2[j])</span><br><span class="line">          ) &#123;</span><br><span class="line">            newIndex = j;</span><br><span class="line">            break;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      if (newIndex === undefined) &#123;</span><br><span class="line">        // 没有找到匹配的新节点，删除当前旧节点</span><br><span class="line">        unmount(prevChild);</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        // 保存旧节点索引（+1 是为了避免与默认值0冲突）</span><br><span class="line">        newIndexToOldIndexMap[newIndex - s2] = i + 1;</span><br><span class="line">        </span><br><span class="line">        // 判断节点是否需要移动</span><br><span class="line">        if (newIndex &gt;= maxNewIndexSoFar) &#123;</span><br><span class="line">          maxNewIndexSoFar = newIndex;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">          moved = true;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        // 复用旧节点，更新内容</span><br><span class="line">        patch(prevChild, c2[newIndex], container);</span><br><span class="line">        patched++;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 5.3 使用LIS算法计算最小移动次数</span><br><span class="line">    const increasingNewIndexSequence = moved</span><br><span class="line">      ? getSequence(newIndexToOldIndexMap)</span><br><span class="line">      : [];</span><br><span class="line">    j = increasingNewIndexSequence.length - 1;</span><br><span class="line"></span><br><span class="line">    // 5.4 移动和插入节点</span><br><span class="line">    for (i = toBePatched - 1; i &gt;= 0; i--) &#123;</span><br><span class="line">      const nextIndex = s2 + i;</span><br><span class="line">      const nextChild = c2[nextIndex];</span><br><span class="line">      const anchor = nextIndex + 1 &lt; l2 ? c2[nextIndex + 1].el : parentAnchor;</span><br><span class="line"></span><br><span class="line">      if (newIndexToOldIndexMap[i] === 0) &#123;</span><br><span class="line">        // 新节点，需要插入</span><br><span class="line">        patch(null, nextChild, container, anchor);</span><br><span class="line">      &#125; else if (moved) &#123;</span><br><span class="line">        // 需要移动节点</span><br><span class="line">        if (j &lt; 0 || i !== increasingNewIndexSequence[j]) &#123;</span><br><span class="line">          move(nextChild, container, anchor);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">          j--;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 判断两个VNode是否可以复用（key和type都相同）</span><br><span class="line">function isSameVNodeType(n1, n2) &#123;</span><br><span class="line">  return n1.type === n2.type &amp;&amp; n1.key === n2.key;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 最长递增子序列算法（Vue 3源码实现）</span><br><span class="line">function getSequence(arr) &#123;</span><br><span class="line">  const p = arr.slice();</span><br><span class="line">  const result = [0];</span><br><span class="line">  let i, j, u, v, c;</span><br><span class="line">  const len = arr.length;</span><br><span class="line">  for (i = 0; i &lt; len; i++) &#123;</span><br><span class="line">    const arrI = arr[i];</span><br><span class="line">    if (arrI !== 0) &#123;</span><br><span class="line">      j = result[result.length - 1];</span><br><span class="line">      if (arr[j] &lt; arrI) &#123;</span><br><span class="line">        p[i] = j;</span><br><span class="line">        result.push(i);</span><br><span class="line">        continue;</span><br><span class="line">      &#125;</span><br><span class="line">      u = 0;</span><br><span class="line">      v = result.length - 1;</span><br><span class="line">      while (u &lt; v) &#123;</span><br><span class="line">        c = (u + v) &gt;&gt; 1;</span><br><span class="line">        if (arr[result[c]] &lt; arrI) &#123;</span><br><span class="line">          u = c + 1;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">          v = c;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      if (arrI &lt; arr[result[u]]) &#123;</span><br><span class="line">        if (u &gt; 0) &#123;</span><br><span class="line">          p[i] = result[u - 1];</span><br><span class="line">        &#125;</span><br><span class="line">        result[u] = i;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  u = result.length;</span><br><span class="line">  v = result[u - 1];</span><br><span class="line">  while (u-- &gt; 0) &#123;</span><br><span class="line">    result[u] = v;</span><br><span class="line">    v = p[v];</span><br><span class="line">  &#125;</span><br><span class="line">  return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br></pre></td><td class="code"><pre><span class="line">// React的Diff算法（简化）</span><br><span class="line">// 1. 双指针遍历新旧children</span><br><span class="line">// 2. 根据key判断节点是更新、新增还是删除</span><br><span class="line">function reconcileChildren(current, workInProgress) &#123;</span><br><span class="line">  // 当前渲染的fiber节点</span><br><span class="line">  const currentFirstChild = current.child;</span><br><span class="line">  // 工作中的fiber节点（新的虚拟DOM）</span><br><span class="line">  let workInProgressChild = workInProgress.child;</span><br><span class="line">  </span><br><span class="line">  // 1. 双指针初始化</span><br><span class="line">  let oldFiber = currentFirstChild;</span><br><span class="line">  let newIdx = 0;</span><br><span class="line">  let prevNewFiber = null;</span><br><span class="line">  </span><br><span class="line">  // 2. 第一轮遍历：处理相同位置的节点（快速路径）</span><br><span class="line">  while (oldFiber !== null &amp;&amp; newIdx &lt; newChildren.length) &#123;</span><br><span class="line">    const newChild = newChildren[newIdx];</span><br><span class="line">    </span><br><span class="line">    // 2.1 通过key和type判断节点是否可以复用</span><br><span class="line">    const sameType = oldFiber.type === newChild.type;</span><br><span class="line">    </span><br><span class="line">    if (!sameType) &#123;</span><br><span class="line">      // 2.2 类型不同，无法复用，标记旧节点为删除</span><br><span class="line">      if (oldFiber) &#123;</span><br><span class="line">        deleteChild(workInProgress, oldFiber);</span><br><span class="line">      &#125;</span><br><span class="line">      break;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 2.3 可以复用，创建新的fiber节点</span><br><span class="line">    const newFiber = createWorkInProgress(oldFiber, newChild.props);</span><br><span class="line">    </span><br><span class="line">    // 2.4 连接到DOM树</span><br><span class="line">    if (prevNewFiber === null) &#123;</span><br><span class="line">      workInProgressChild = newFiber;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      prevNewFiber.sibling = newFiber;</span><br><span class="line">    &#125;</span><br><span class="line">    prevNewFiber = newFiber;</span><br><span class="line">    </span><br><span class="line">    // 2.5 移动指针</span><br><span class="line">    oldFiber = oldFiber.sibling;</span><br><span class="line">    newIdx++;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  // 3. 处理新增节点（旧列表已遍历完，新列表还有剩余）</span><br><span class="line">  if (oldFiber === null) &#123;</span><br><span class="line">    while (newIdx &lt; newChildren.length) &#123;</span><br><span class="line">      const newChild = newChildren[newIdx];</span><br><span class="line">      const newFiber = createFiberFromElement(newChild);</span><br><span class="line">      </span><br><span class="line">      if (prevNewFiber === null) &#123;</span><br><span class="line">        workInProgressChild = newFiber;</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        prevNewFiber.sibling = newFiber;</span><br><span class="line">      &#125;</span><br><span class="line">      prevNewFiber = newFiber;</span><br><span class="line">      newIdx++;</span><br><span class="line">    &#125;</span><br><span class="line">    return;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  // 4. 处理删除节点（新列表已遍历完，旧列表还有剩余）</span><br><span class="line">  if (newIdx === newChildren.length) &#123;</span><br><span class="line">    while (oldFiber !== null) &#123;</span><br><span class="line">      deleteChild(workInProgress, oldFiber);</span><br><span class="line">      oldFiber = oldFiber.sibling;</span><br><span class="line">    &#125;</span><br><span class="line">    return;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  // 5. 复杂情况：乱序节点处理（使用key进行重排序）</span><br><span class="line">  // 5.1 建立旧节点的key到index的映射</span><br><span class="line">  const existingChildren = mapRemainingChildren(oldFiber);</span><br><span class="line">  </span><br><span class="line">  // 5.2 遍历剩余新节点，寻找最佳匹配</span><br><span class="line">  for (; newIdx &lt; newChildren.length; newIdx++) &#123;</span><br><span class="line">    const newChild = newChildren[newIdx];</span><br><span class="line">    </span><br><span class="line">    // 5.3 通过key查找可复用的旧节点</span><br><span class="line">    const matchedFiber = existingChildren.get(</span><br><span class="line">      newChild.key === null ? newChild.type : newChild.key</span><br><span class="line">    );</span><br><span class="line">    </span><br><span class="line">    if (matchedFiber) &#123;</span><br><span class="line">      // 5.4 复用找到的节点</span><br><span class="line">      const newFiber = useFiber(matchedFiber, newChild.props);</span><br><span class="line">      // 从映射中删除已复用的节点</span><br><span class="line">      existingChildren.delete(</span><br><span class="line">        newChild.key === null ? newChild.type : newChild.key</span><br><span class="line">      );</span><br><span class="line">      </span><br><span class="line">      // 连接到DOM树</span><br><span class="line">      if (prevNewFiber === null) &#123;</span><br><span class="line">        workInProgressChild = newFiber;</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        prevNewFiber.sibling = newFiber;</span><br><span class="line">      &#125;</span><br><span class="line">      prevNewFiber = newFiber;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      // 5.5 没有可复用的节点，创建新节点</span><br><span class="line">      const newFiber = createFiberFromElement(newChild);</span><br><span class="line">      </span><br><span class="line">      if (prevNewFiber === null) &#123;</span><br><span class="line">        workInProgressChild = newFiber;</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        prevNewFiber.sibling = newFiber;</span><br><span class="line">      &#125;</span><br><span class="line">      prevNewFiber = newFiber;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  // 5.6 删除所有未被复用的旧节点</span><br><span class="line">  existingChildren.forEach(child =&gt; deleteChild(workInProgress, child));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 辅助函数：建立旧节点的key到fiber的映射</span><br><span class="line">function mapRemainingChildren(currentFirstChild) &#123;</span><br><span class="line">  const existingChildren = new Map();</span><br><span class="line">  let existingChild = currentFirstChild;</span><br><span class="line">  </span><br><span class="line">  while (existingChild !== null) &#123;</span><br><span class="line">    if (existingChild.key !== null) &#123;</span><br><span class="line">      existingChildren.set(existingChild.key, existingChild);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      existingChildren.set(existingChild.type, existingChild);</span><br><span class="line">    &#125;</span><br><span class="line">    existingChild = existingChild.sibling;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  return existingChildren;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-渲染优化"><a href="#2-渲染优化" class="headerlink" title="2. 渲染优化"></a>2. <strong>渲染优化</strong></h4><ul>
+<li><p><strong>Vue 3</strong>：</p>
+<ul>
+<li><strong>编译时优化</strong>：静态提升（Static Hoisting）、Block Tree</li>
+<li>自动标记动态节点，减少 Diff 范围</li>
+<li>事件处理函数缓存（<code>cacheHandlers</code>）</li>
+</ul>
+</li>
+<li><p><strong>React</strong>：</p>
+<ul>
+<li><strong>运行时优化</strong>：依赖<code>React.memo</code>、<code>useMemo</code>、<code>useCallback</code>等手动优化</li>
+<li>需要开发者主动控制组件更新（如<code>shouldComponentUpdate</code>）</li>
+<li>引入<strong>Concurrent Mode</strong>（实验性）实现优先级渲染</li>
+</ul>
+</li>
+</ul>
+<h3 id="二、实现策略差异"><a href="#二、实现策略差异" class="headerlink" title="二、实现策略差异"></a><strong>二、实现策略差异</strong></h3><h4 id="1-模板-vs-JSX"><a href="#1-模板-vs-JSX" class="headerlink" title="1. 模板 vs JSX"></a>1. <strong>模板 vs JSX</strong></h4><ul>
+<li><p><strong>Vue 3</strong>：</p>
+<ul>
+<li><p>主要使用<strong>模板语法</strong>（<code>.vue</code>文件）</p>
+</li>
+<li><p>编译时生成优化的渲染函数</p>
+</li>
+<li><p>示例：</p>
+<p>vue</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div&gt;&#123;&#123; message &#125;&#125;&lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p><strong>React</strong>：</p>
+<ul>
+<li><p>主要使用<strong>JSX</strong>（JavaScript 语法扩展）</p>
+</li>
+<li><p>运行时编译 JSX 为<code>React.createElement</code>调用</p>
+</li>
+<li><p>示例：</p>
+<p>jsx</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function App() &#123;</span><br><span class="line">  return &lt;div&gt;&#123;message&#125;&lt;/div&gt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-响应式系统"><a href="#2-响应式系统" class="headerlink" title="2. 响应式系统"></a>2. <strong>响应式系统</strong></h4><ul>
+<li><p><strong>Vue 3</strong>：</p>
+<ul>
+<li><p>内置<strong>Proxy-based 响应式系统</strong></p>
+</li>
+<li><p>自动追踪依赖，精确触发更新</p>
+</li>
+<li><p>示例：</p>
+<p>javascript</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import &#123; reactive &#125; from &apos;vue&apos;</span><br><span class="line">const state = reactive(&#123; count: 0 &#125;)</span><br><span class="line">// state.count变化时自动触发更新</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p><strong>React</strong>：</p>
+<ul>
+<li><p>使用<strong>不可变数据</strong>和<strong>状态管理库</strong>（如 Redux）</p>
+</li>
+<li><p>通过<code>setState</code>或<code>useState</code>显式触发更新</p>
+</li>
+<li><p>示例：</p>
+<p>javascript</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const [count, setCount] = useState(0)</span><br><span class="line">// 必须调用setCount才能触发更新</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="三、性能优化差异"><a href="#三、性能优化差异" class="headerlink" title="三、性能优化差异"></a><strong>三、性能优化差异</strong></h3><h4 id="1-静态内容处理"><a href="#1-静态内容处理" class="headerlink" title="1. 静态内容处理"></a>1. <strong>静态内容处理</strong></h4><ul>
+<li><p><strong>Vue 3</strong>：</p>
+<ul>
+<li><p>编译时识别静态节点并提升（Static Hoisting）</p>
+</li>
+<li><p>静态节点只创建一次，后续渲染直接复用</p>
+</li>
+<li><p>示例：</p>
+<p>vue</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">  &lt;h1&gt;Static Title&lt;/h1&gt; &lt;!-- 编译时提升 --&gt;</span><br><span class="line">  &lt;p&gt;&#123;&#123; dynamic &#125;&#125;&lt;/p&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p><strong>React</strong>：</p>
+<ul>
+<li>没有编译时优化，静态节点每次渲染都会重新创建</li>
+<li>需手动使用<code>React.memo</code>或提取组件避免重复渲染</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-事件处理优化"><a href="#2-事件处理优化" class="headerlink" title="2. 事件处理优化"></a>2. <strong>事件处理优化</strong></h4><ul>
+<li><p><strong>Vue 3</strong>：</p>
+<ul>
+<li><p>自动缓存事件处理函数（<code>cacheHandlers</code>）</p>
+</li>
+<li><p>示例：</p>
+<p>vue</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;button @click=&quot;handleClick&quot;&gt;Click&lt;/button&gt;</span><br><span class="line">&lt;!-- 编译后自动缓存handleClick --&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p><strong>React</strong>：</p>
+<ul>
+<li><p>需要手动使用<code>useCallback</code>缓存回调函数</p>
+</li>
+<li><p>示例：</p>
+<p>jsx</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const handleClick = useCallback(() =&gt; &#123;</span><br><span class="line">  // 处理逻辑</span><br><span class="line">&#125;, [dependencies])</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="四、架构设计差异"><a href="#四、架构设计差异" class="headerlink" title="四、架构设计差异"></a><strong>四、架构设计差异</strong></h3><h4 id="1-组件更新粒度"><a href="#1-组件更新粒度" class="headerlink" title="1. 组件更新粒度"></a>1. <strong>组件更新粒度</strong></h4><ul>
+<li><p><strong>Vue 3</strong>：</p>
+<ul>
+<li>组件级更新：单个组件状态变化只会触发该组件重新渲染</li>
+<li>基于响应式系统精确追踪依赖</li>
+</ul>
+</li>
+<li><p><strong>React</strong>：</p>
+<ul>
+<li>函数式组件默认全量重新渲染</li>
+<li>需要通过<code>React.memo</code>、<code>useMemo</code>等手动控制</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-异步渲染"><a href="#2-异步渲染" class="headerlink" title="2. 异步渲染"></a>2. <strong>异步渲染</strong></h4><ul>
+<li><p><strong>Vue 3</strong>：</p>
+<ul>
+<li>渲染过程是<strong>同步</strong>的，但更新是<strong>异步批量</strong>的</li>
+<li>通过<code>nextTick</code>访问更新后的 DOM</li>
+</ul>
+</li>
+<li><p><strong>React</strong>：</p>
+<ul>
+<li><strong>Concurrent Mode</strong>（实验性）支持异步渲染</li>
+<li>可中断渲染过程，优先处理高优先级任务</li>
+</ul>
+</li>
+</ul>
+<h3 id="五、总结对比表"><a href="#五、总结对比表" class="headerlink" title="五、总结对比表"></a><strong>五、总结对比表</strong></h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Vue 3</th>
+<th>React</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Diff 算法</strong></td>
+<td>预处理 + LIS（O (n log n)）</td>
+<td>双指针 + key（O (n)）</td>
+</tr>
+<tr>
+<td><strong>优化方式</strong></td>
+<td>编译时自动优化（静态提升、Block）</td>
+<td>运行时手动优化（React.memo）</td>
+</tr>
+<tr>
+<td><strong>响应式系统</strong></td>
+<td>内置 Proxy-based 响应式</td>
+<td>不可变数据 + 显式 setState</td>
+</tr>
+<tr>
+<td><strong>模板语法</strong></td>
+<td>声明式模板</td>
+<td>JSX</td>
+</tr>
+<tr>
+<td><strong>更新粒度</strong></td>
+<td>组件级</td>
+<td>函数式组件默认全量更新</td>
+</tr>
+<tr>
+<td><strong>异步渲染</strong></td>
+<td>异步批量更新</td>
+<td>Concurrent Mode（实验性）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="六、适用场景"><a href="#六、适用场景" class="headerlink" title="六、适用场景"></a><strong>六、适用场景</strong></h3><ul>
+<li><p><strong>Vue 3</strong>：</p>
+<ul>
+<li>适合需要高性能渲染的大型应用</li>
+<li>对开发效率有较高要求（编译时优化减少手动工作）</li>
+<li>偏好声明式模板语法的开发者</li>
+</ul>
+</li>
+<li><p><strong>React</strong>：</p>
+<ul>
+<li>适合需要灵活控制渲染过程的应用</li>
+<li>团队熟悉 JavaScript / 函数式编程</li>
+<li>需要与复杂状态管理库集成的场景</li>
+</ul>
+</li>
+</ul>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Sir_Liu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://gofugui.github.io/2025/05/22/vue3 和 react 虚拟dom/">https://gofugui.github.io/2025/05/22/vue3 和 react 虚拟dom/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://gofugui.github.io">Coding Your Life</a>！</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/ES6/">ES6</a><a class="post-meta__tags" href="/tags/html/">html</a><a class="post-meta__tags" href="/tags/vue3/">vue3</a><a class="post-meta__tags" href="/tags/react/">react</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2025/05/23/使用MessageChannel模拟React优先级执行队列/"><i class="fa fa-chevron-left">  </i><span>使用MessageChannel模拟React优先级执行队列</span></a></div><div class="next-post pull-right"><a href="/2025/05/21/ES6中Reflect对象与Proxy结合实现代理和响应式编程/"><span>ES6中Reflect对象与Proxy结合实现代理和响应式编程</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="gitalk-container"></div><script>var gitalk = new Gitalk({
+  clientID: 'Ov23liqBpY9MxdjqDFTA',
+  clientSecret: 'c824e3fe864528851e7734e9f4661a8fd108b390',
+  repo: 'gofugui.github.io',
+  owner: 'gofugui',
+  admin: 'gofugui',
+  id: md5(decodeURI(location.pathname)),
+  language: 'zh-CN'
+})
+gitalk.render('gitalk-container')</script></div></div><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4583227810964573" data-ad-slot="8925032663" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});
+</script><footer class="footer-bg" style="background-image: url(chrome-extension://pkfjcehoipcdbiilobhcblbkmelocaka/start/skin/images/bg-51.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2025 By Sir_Liu</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.0"></script><script src="/js/fancybox.js?version=1.9.0"></script><script src="/js/sidebar.js?version=1.9.0"></script><script src="/js/copy.js?version=1.9.0"></script><script src="/js/fireworks.js?version=1.9.0"></script><script src="/js/transition.js?version=1.9.0"></script><script src="/js/scroll.js?version=1.9.0"></script><script src="/js/head.js?version=1.9.0"></script> <script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script></body></html>

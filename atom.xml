@@ -6,7 +6,7 @@
   <link href="https://gofugui.github.io/atom.xml" rel="self"/>
   
   <link href="https://gofugui.github.io/"/>
-  <updated>2025-05-28T07:13:56.573Z</updated>
+  <updated>2025-06-01T10:07:07.432Z</updated>
   <id>https://gofugui.github.io/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>基于pdf-lib库开发的一款PDF处理小工具</title>
+    <link href="https://gofugui.github.io/2025/06/01/%E5%9F%BA%E4%BA%8Epdf-lib%E5%BA%93%E5%BC%80%E5%8F%91%E7%9A%84%E4%B8%80%E6%AC%BEPDF%E5%A4%84%E7%90%86%E5%B0%8F%E5%B7%A5%E5%85%B7/"/>
+    <id>https://gofugui.github.io/2025/06/01/%E5%9F%BA%E4%BA%8Epdf-lib%E5%BA%93%E5%BC%80%E5%8F%91%E7%9A%84%E4%B8%80%E6%AC%BEPDF%E5%A4%84%E7%90%86%E5%B0%8F%E5%B7%A5%E5%85%B7/</id>
+    <published>2025-06-01T09:18:39.079Z</published>
+    <updated>2025-06-01T10:07:07.432Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="PDF处理工具体验地址-点我体验"><a href="#PDF处理工具体验地址-点我体验" class="headerlink" title="PDF处理工具体验地址 点我体验"></a>PDF处理工具体验地址 <a href="http://localhost:4000/pdfTools/index.html" target="_blank" rel="noopener">点我体验</a></h1><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>今天要提交一些入职文件，为了保证隐私所以要对一些私密的资料加一个水印，防止信息泄露后被乱用，但是问题来了，我使用office和wps去加水印，发现前者只能加在doc文档上，后者加的水印无法调整透明度，导致内容被遮挡，所以就有了这个小工具。下面我来介绍一下这个工具的功能，以及后续的升级计划，大家如果有需求可以在评论区提，我尽量满足大家。</p><h1 id="功能介绍"><a href="#功能介绍" class="headerlink" title="功能介绍"></a>功能介绍</h1><ol><li><strong>PDF生成</strong>：当前支持输入文本生成pdf，支持在PDF中插入图片。</li><li><strong>PDF合并</strong>：用户可以选择多个PDF文件合并成一个PDF文件（当前没限制单次合并数量以及单个文件大小，但是为了保证效率如果文件数量较多，且单个文件过大，建议分多次合并）。</li><li><strong>添加水印</strong>：给用户的PDF添加水印（当前仅支持加单行水印）。</li><li><strong>提取页面</strong>：用户可以摘取一个PDF中的任意页面合并成一个新的PDF文件。</li></ol><h1 id="功能优化计划TODO："><a href="#功能优化计划TODO：" class="headerlink" title="功能优化计划TODO："></a><strong>功能优化计划TODO：</strong></h1><ol><li><strong>文件上传限制</strong>：目前上传文件没有大小限制，需要优化为可配置。</li><li><strong>文本生成PDF支持自动换行</strong>：当前用户输入的单行文本如果过长，超出A4纸宽度的部分会无法展示。</li><li><strong>文本生成PDF可以指定是否显示标题</strong>：目前生成的PDF中，标题是固定的，需要优化为可配置隐藏。</li><li><strong>文本生成PDF支持多页</strong>：目前只能支持生成单页PDF文件，需要优化为可根据文本内容自动生成多页。</li><li><strong>PDF提取范围扩大</strong>：当前只支持在单个PDF中提取页面合并，无法在多个PDF文件中提取页面合并。</li><li><strong>PDF去水印</strong>：给PDF去水印。</li></ol><p>这是我总结的，大家要是有需求可以在评论区提出。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;PDF处理工具体验地址-点我体验&quot;&gt;&lt;a href=&quot;#PDF处理工具体验地址-点我体验&quot; class=&quot;headerlink&quot; title=&quot;PDF处理工具体验地址 点我体验&quot;&gt;&lt;/a&gt;PDF处理工具体验地址 &lt;a href=&quot;http://localhost:</summary>
+      
+    
+    
+    
+    <category term="PDF处理工具" scheme="https://gofugui.github.io/categories/PDF处理工具/"/>
+    
+    
+    <category term="JavaScript" scheme="https://gofugui.github.io/tags/JavaScript/"/>
+    
+    <category term="ES6" scheme="https://gofugui.github.io/tags/ES6/"/>
+    
+    <category term="canvas" scheme="https://gofugui.github.io/tags/canvas/"/>
+    
+  </entry>
   
   <entry>
     <title>nodejs开发npm镜像源管理工具npm-mirror-cli</title>
@@ -144,11 +172,11 @@
     
     <category term="JavaScript" scheme="https://gofugui.github.io/tags/JavaScript/"/>
     
+    <category term="Canvas" scheme="https://gofugui.github.io/tags/Canvas/"/>
+    
     <category term="ES6" scheme="https://gofugui.github.io/tags/ES6/"/>
     
     <category term="html" scheme="https://gofugui.github.io/tags/html/"/>
-    
-    <category term="Canvas" scheme="https://gofugui.github.io/tags/Canvas/"/>
     
   </entry>
   
@@ -233,9 +261,9 @@
     
     <category term="JavaScript" scheme="https://gofugui.github.io/tags/JavaScript/"/>
     
-    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
-    
     <category term="ES6" scheme="https://gofugui.github.io/tags/ES6/"/>
+    
+    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
     
   </entry>
   
@@ -261,11 +289,11 @@
     
     <category term="JavaScript" scheme="https://gofugui.github.io/tags/JavaScript/"/>
     
-    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
-    
     <category term="ES6" scheme="https://gofugui.github.io/tags/ES6/"/>
     
     <category term="html" scheme="https://gofugui.github.io/tags/html/"/>
+    
+    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
     
   </entry>
   
@@ -291,11 +319,11 @@
     
     <category term="JavaScript" scheme="https://gofugui.github.io/tags/JavaScript/"/>
     
-    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
-    
     <category term="ES6" scheme="https://gofugui.github.io/tags/ES6/"/>
     
     <category term="html" scheme="https://gofugui.github.io/tags/html/"/>
+    
+    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
     
   </entry>
   
@@ -321,11 +349,11 @@
     
     <category term="JavaScript" scheme="https://gofugui.github.io/tags/JavaScript/"/>
     
-    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
-    
     <category term="ES6" scheme="https://gofugui.github.io/tags/ES6/"/>
     
     <category term="html" scheme="https://gofugui.github.io/tags/html/"/>
+    
+    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
     
   </entry>
   
@@ -351,11 +379,11 @@
     
     <category term="JavaScript" scheme="https://gofugui.github.io/tags/JavaScript/"/>
     
-    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
-    
     <category term="ES6" scheme="https://gofugui.github.io/tags/ES6/"/>
     
     <category term="html" scheme="https://gofugui.github.io/tags/html/"/>
+    
+    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
     
   </entry>
   
@@ -382,11 +410,11 @@
     
     <category term="JavaScript" scheme="https://gofugui.github.io/tags/JavaScript/"/>
     
-    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
-    
     <category term="ES6" scheme="https://gofugui.github.io/tags/ES6/"/>
     
     <category term="html" scheme="https://gofugui.github.io/tags/html/"/>
+    
+    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
     
   </entry>
   
@@ -490,9 +518,9 @@
     
     <category term="JavaScript" scheme="https://gofugui.github.io/tags/JavaScript/"/>
     
-    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
-    
     <category term="ES6" scheme="https://gofugui.github.io/tags/ES6/"/>
+    
+    <category term="Web" scheme="https://gofugui.github.io/tags/Web/"/>
     
   </entry>
   
